@@ -56,7 +56,7 @@ protocol Dealership {
 // Добавим также наборы характеристик авто:
 
 ///Набор аксессуаров для авто:
-enum Accessories: String {
+enum Accessories: String, CaseIterable {
     case footPad = "Foot pad"
     case chordPlatedParts = "Сhord-plated parts"
     case neonLights = "Neon lights"
@@ -184,11 +184,11 @@ class Dealer: Dealership {
             randomAccesoriesForNewCar?.insert(accesories.randomElement()!)
         }
         
-        let randomColourForNewCar = Colors.init(rawValue: Int.random(in: 0..<Colors.allCases.count))!
+        let randomColorForNewCar = Colors.init(rawValue: Int.random(in: 0..<Colors.allCases.count))!
         
         let newCar = CarStruct(
             model: name, //Бренд машины совпадает с брендом диллера
-            color: randomColourForNewCar,
+            color: randomColorForNewCar,
             buildDate: Date(timeIntervalSinceNow: 0),
             price: Int.random(in: 10000...50000)/1000*1000, //Рандомный прайс в диапазоне с шагом в 1000
             accessories: randomAccesoriesForNewCar,
@@ -622,12 +622,55 @@ bmwShop.showroomCars.count // Для дебага. Должно стать 3 ш�
 //}
 
 
+
+/*:
+ Задача: сделать так, чтобы можно было напечатать описание содержимого складов у наших дилеров.
+ */
+// Решение 1.
 extension Array where Element == Car {
     var description: String {
-        var string: String = ""
+        var string: String = "\nРешение 1: " + "\(type(of: self)), \(self.count) items:\n"
         for item in self {
-            string += item.model.rawValue + " " + item.color.rawValue
+            string += item.model.rawValue + "\n"
         }
         return string
     }
 }
+
+// Решение 2.
+extension Array where Element == Car {
+    var description1: String {
+        return "\nРешение 2: " + "\(type(of: self)), \(self.count) items:\n" + self.map({"\($0.model.rawValue)"}).joined(separator: "\n")
+    }
+}
+
+// Решение 3.
+extension String {
+    init(describing instance: Array<Car>) {
+        let description = "\nРешение 3: " + "\(type(of: instance)), \(instance.count) items:\n" + instance.map({"\($0.model.rawValue)"}).joined(separator: "\n")
+        self.init("\(description)")
+    }
+}
+
+// Проверяем, как работают наши решения:
+print(bmwShop.showroomCars.description)
+print(bmwShop.showroomCars.description1)
+print(String(describing: bmwShop.showroomCars))
+
+
+extension Dealer: CustomStringConvertible {
+    public var description: String {
+        var description: String = "\nDealer of \(type(of: self)):\n"
+        description += "  \(self.showroomCars.count) cars in showroom:\n"
+        description += self.showroomCars.map({"    \($0.model.rawValue), price: \($0.price)"}).joined(separator: "\n") + "\n"
+        description += "  \(self.stockCars.count) cars in stock:\n"
+        description += self.stockCars.map({"    \($0.model.rawValue), price: \($0.price)"}).joined(separator: "\n") + "\n"
+        description += "  Available accesories:\n"
+        for (index, item) in self.accesories.enumerated() {
+            description += "    \(index + 1). " + item.rawValue + "\n"
+        }
+        return description
+    }
+}
+
+print(bmwShop)
