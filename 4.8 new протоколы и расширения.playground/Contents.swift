@@ -81,7 +81,7 @@ enum Colors: Int, CaseIterable {
  Обратите внимание! Используйте конструкцию приведения типа данных для решения этой задачи.
  */
 ///Марки машин:
-enum Brands {
+enum Brands: String {
     case BMW, Honda, Audi, Lexus, Volvo
 }
 
@@ -223,21 +223,25 @@ var bmw1 = CarStruct(
     model: .BMW,
     color: .white,
     buildDate: date1,
-    price: 15000,
+    price: 15_000,
     accessories: nil,
     isServiced: false)
 let bmw2 = CarStruct(
     model: .BMW,
     color: .red,
     buildDate: date2,
-    price: 50000,
-    accessories: [.chordPlatedParts, .footPad, .enlargedWheels, .neonLights],
+    price: 50_000,
+    accessories: [
+        .chordPlatedParts,
+        .footPad,
+        .enlargedWheels,
+        .neonLights],
     isServiced: true)
 let bmw3 = CarStruct(
     model: .BMW,
     color: .black,
     buildDate: date3,
-    price: 20000,
+    price: 20_000,
     accessories: [.footPad],
     isServiced: false)
 let bmw4 = CarStruct(
@@ -616,3 +620,14 @@ bmwShop.showroomCars.count // Для дебага. Должно стать 3 ш�
 //    
 //    
 //}
+
+
+extension Array where Element == Car {
+    var description: String {
+        var string: String = ""
+        for item in self {
+            string += item.model.rawValue + " " + item.color.rawValue
+        }
+        return string
+    }
+}
