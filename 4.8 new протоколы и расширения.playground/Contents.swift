@@ -622,7 +622,6 @@ bmwShop.showroomCars.count // Для дебага. Должно стать 3 ш�
 //}
 
 
-
 /*:
  Задача: сделать так, чтобы можно было напечатать описание содержимого складов у наших дилеров.
  */
@@ -662,9 +661,9 @@ extension Dealer: CustomStringConvertible {
     public var description: String {
         var description: String = "\nDealer of \(type(of: self)):\n"
         description += "  \(self.showroomCars.count) cars in showroom:\n"
-        description += self.showroomCars.map({"    \($0.model.rawValue), price: \($0.price)"}).joined(separator: "\n") + "\n"
+        description += self.showroomCars.map({"    \($0.model.rawValue), \($0.color), price: \($0.price)"}).joined(separator: "\n") + "\n"
         description += "  \(self.stockCars.count) cars in stock:\n"
-        description += self.stockCars.map({"    \($0.model.rawValue), price: \($0.price)"}).joined(separator: "\n") + "\n"
+        description += self.stockCars.map({"    \($0.model.rawValue), \($0.color), price: \($0.price)"}).joined(separator: "\n") + "\n"
         description += "  Available accesories:\n"
         for (index, item) in self.accesories.enumerated() {
             description += "    \(index + 1). " + item.rawValue + "\n"
